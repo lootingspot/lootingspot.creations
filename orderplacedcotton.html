@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cotton Shirt Order Form - LOOTINGSPOT</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f8ff;
+      padding: 30px;
+    }
+    h2 {
+      text-align: center;
+      color: #007bff;
+    }
+    form {
+      max-width: 500px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      color: #333;
+      font-weight: 600;
+    }
+    select, input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+    input[readonly] {
+      background-color: #f2f2f2;
+      cursor: not-allowed;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      padding: 12px 20px;
+      margin-top: 20px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0056cc;
+    }
+    .price-display {
+      margin-top: 10px;
+      font-size: 18px;
+      color: #007bff;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🧵 Cotton Shirt Order Form - LOOTINGSPOT</h2>
+
+<form id="orderForm">
+
+  <label for="product">Select Cotton Shirt (Color)</label>
+  <select id="product" required>
+    <option value="" disabled selected>Select a color</option>
+    <option value="white">White Cotton Shirt</option>
+    <option value="blue">Blue Cotton Shirt</option>
+    <option value="black">Black Cotton Shirt</option>
+    <option value="pink">Pink Cotton Shirt</option>
+    <option value="grey">Grey Cotton Shirt</option>
+    <option value="green">Green Cotton Shirt</option>
+  </select>
+
+  <label for="size">Select Size</label>
+  <select id="size" required>
+    <option value="" disabled selected>Select size</option>
+    <option value="S">S</option>
+    <option value="M">M</option>
+    <option value="L">L</option>
+    <option value="XL">XL</option>
+    <option value="XXL">XXL</option>
+    <option value="2XL">2XL</option>
+    <option value="3XL">3XL</option>
+  </select>
+
+  <p class="price-display" id="price">Price: ₹ —</p>
+
+  <label>Full Name</label>
+  <input type="text" id="name" placeholder="Enter your full name" required>
+
+  <label>Address</label>
+  <textarea id="address" placeholder="Enter your address" required></textarea>
+
+  <label>Phone Number</label>
+  <input type="tel" id="phone" placeholder="Enter phone number" required>
+
+  <label>Email</label>
+  <input type="email" id="email" placeholder="Enter email" required>
+
+  <label>Pin Code</label>
+  <input type="text" id="pincode" placeholder="Enter pin code" required>
+
+  <label>Payment Method</label>
+  <input type="text" value="Cash on Delivery" readonly>
+
+  <button type="submit">Confirm Order</button>
+</form>
+
+<script>
+  // ✅ Fixed key names to match product values
+  const priceList = {
+    white: { S:549, M:549, L:549, XL:549, XXL:599, "2XL":649, "3XL":699 },
+    blue:  { S:579, M:579, L:599, XL:629, XXL:649, "2XL":699, "3XL":749 },
+    black: { S:599, M:629, L:649, XL:699, XXL:749, "2XL":799, "3XL":849 },
+    pink:  { S:569, M:599, L:629, XL:659, XXL:699, "2XL":749, "3XL":799 },
+    grey:  { S:529, M:549, L:579, XL:619, XXL:649, "2XL":699, "3XL":749 },
+    green: { S:549, M:569, L:599, XL:639, XXL:669, "2XL":719, "3XL":769 }
+  };
+
+  const productSelect = document.getElementById('product');
+  const sizeSelect = document.getElementById('size');
+  const priceDisplay = document.getElementById('price');
+
+  function updatePrice() {
+    const product = productSelect.value;
+    const size = sizeSelect.value;
+    if (product && size && priceList[product]) {
+      const price = priceList[product][size];
+      priceDisplay.textContent = "Price: ₹" + price;
+    } else {
+      priceDisplay.textContent = "Price: ₹ —";
+    }
+  }
+
+  productSelect.addEventListener('change', updatePrice);
+  sizeSelect.addEventListener('change', updatePrice);
+
+  document.getElementById('orderForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const productText = productSelect.options[productSelect.selectedIndex].text;
+    const productKey = productSelect.value;
+    const size = sizeSelect.value;
+    const price = priceList[productKey][size];
+
+    const order = {
+      name: document.getElementById('name').value,
+      address: document.getElementById('address').value,
+      phone: document.getElementById('phone').value,
+      email: document.getElementById('email').value,
+      pincode: document.getElementById('pincode').value,
+      product: productText,
+      size: size,
+      price: price,
+      payment: "Cash on Delivery"
+    };
+
+    const orders = JSON.parse(localStorage.getItem('orders')) || [];
+    orders.push(order);
+    localStorage.setItem('orders', JSON.stringify(orders));
+
+    alert(`✅ Order Confirmed!
+Name: ${order.name}
+Email: ${order.email}
+Product: ${order.product}
+Size: ${order.size}
+Price: ₹${order.price}
+Phone: ${order.phone}
+Payment: Cash on Delivery`);
+
+    window.location.href = "customerdetails.html";
+  });
+</script>
+
+</body>
+</html>
